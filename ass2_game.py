@@ -104,8 +104,8 @@ class Player(pg.sprite.Sprite):
             self.alpha_duration += 1
             if self.alpha_duration > 170:
                 self.image.set_alpha(255)
-        mouse = pg.mouse.get_pos()   #Player will follow the mouse cursor
-        self.rect.x = mouse[0] - 20      #To center the player bullet
+        mouse = pg.mouse.get_pos()                  #Player will follow the mouse cursor
+        self.rect.x = mouse[0] - 20                 #To center the player bullet
         self.rect.y = mouse[1] + 40
         if self.count_to_live > 100:
             self.alive = True
