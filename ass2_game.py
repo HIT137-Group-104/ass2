@@ -78,11 +78,11 @@ class Spots(Background):
         self.rect.x = random.randrange(0, s_width)
         self.rect.y = random.randrange(0, s_height)
         self.image.fill('grey')             #changing the spots(stars) colour to grey
-        self.vel = random.randint(3, 8)
+        self.vel = random.randint(3, 8)     #the amount of spaces it will randomly move from top to bottom
 
     def update(self):
-        self.rect.y += self.vel
-        if self.rect.y > s_height:
+        self.rect.y += self.vel     #the spots will keep going downwards
+        if self.rect.y > s_height:  #until it reaches the bottom
             self.rect.x = random.randrange(0, s_width)
             self.rect.y = random.randrange(0, s_height)
 
@@ -92,7 +92,7 @@ class Player(pg.sprite.Sprite):
         super().__init__()
         self.image = pg.image.load(img)
         self.rect = self.image.get_rect()
-        self.image.set_colorkey('black')
+        self.image.set_colorkey('black')    #so the player image does not look like a rectangle
         self.alive = True
         self.count_to_live = 0
         self.activate_bullet = True
@@ -129,13 +129,13 @@ class Player(pg.sprite.Sprite):
 class Small(Player):
     def __init__(self, img):
         super().__init__(img)
-        self.rect.x = random.randrange(0, s_width-80)
+        self.rect.x = random.randrange(0, s_width-80)   #to place the small enemies randomly within the screen
         self.rect.y = random.randrange(-500, 0)
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def update(self):
         self.rect.y += 1
-        if self.rect.y > s_height:
+        if self.rect.y > s_height:     #how the small enemies will move in a direction that we want, in this case downwards
             self.rect.x = random.randrange(80, s_width-50)
             self.rect.y = random.randrange(-2000, 0)
         self.shoot()
@@ -152,8 +152,8 @@ class Small(Player):
 class Big(Small):
     def __init__(self, img):
         super().__init__(img)
-        self.rect.x = -200
-        self.rect.y = 200
+        self.rect.x = -200  #we want the big enemy to move from the middle left. if it is not killed it will then move back from the middle right.
+        self.rect.y = 200   #if it is killed, a new big enemy will spawn from the left again
         self.move = 1
 
     def update(self):
@@ -167,7 +167,7 @@ class Big(Small):
     def shoot(self):
         if self.rect.x % 50 == 0:
             bigbullet = EnemyBullet(big_enemy_bullet)
-            bigbullet.rect.x = self.rect.x + 50
+            bigbullet.rect.x = self.rect.x + 50 #this is to ensure that the bullets are shot from the middle
             bigbullet.rect.y = self.rect.y + 70
             big_bullet_grp.add(bigbullet)
             sprite_group.add(bigbullet)
@@ -181,19 +181,19 @@ class PlayerBullet(pg.sprite.Sprite):
         self.image.set_colorkey('black')
 
     def update(self):
-        self.rect.y -= 20
-        if self.rect.y < 0:
+        self.rect.y -= 20       #this code is to adjust the speed of the bullet going upwards from the player ship
+        if self.rect.y < 0:     #if it reaches to y axis = 0, it will disappear
             self.kill()
 
 
 class EnemyBullet(PlayerBullet):
     def __init__(self, img):
         super().__init__(img)
-        self.image.set_colorkey('white')
+        self.image.set_colorkey('white')    #to remove the background around the enemy bullet image
 
     def update(self):
-        self.rect.y += 3
-        if self.rect.y > s_height:
+        self.rect.y += 3    #the enemy bullet will go downwards in increments of 3 in y axis
+        if self.rect.y > s_height:  #it will disappear when it reaches to the bottom of the screen
             self.kill()
 
 
@@ -305,7 +305,7 @@ class Game:                                 #making a class for game
             pg.display.update()
 
     def create_bg(self):            #define a function for "create_bg) 
-        for i in range(20):         #create 20 stars on the game 
+        for i in range(20):         #create the amount of spots in this case 20, going diagonally in the background 
             x = random.randint(1, 6)        #change the size between 1-6px randomly
             bg_img = Background(x, x)
             bg_img.rect.x = random.randrange(0, s_width)
@@ -314,7 +314,7 @@ class Game:                                 #making a class for game
             sprite_group.add(bg_img)
 
     def create_spots(self):
-        for i in range(70):
+        for i in range(70): #create the amount of spots going downwards
             x = 1
             y = random.randint(1, 7)
             stars = Spots(x, y)
@@ -327,14 +327,14 @@ class Game:                                 #making a class for game
         sprite_group.add(self.player)
 
     def create_small_enemy(self):
-        for i in range(6):
-            self.enemy = Small(small_enemy)
+        for i in range(6):      #how many small enemies we want to spawn
+            self.enemy = Small(small_enemy) 
             small_enemy_grp.add(self.enemy)
             sprite_group.add(self.enemy)
                 
     def create_big_enemy(self):
-        for i in range(1):
-            self.ufo = Big(big_enemy)
+        for i in range(1):      # 1 big enemy to spawn
+            self.ufo = Big(big_enemy)   
             big_enemy_grp.add(self.ufo)
             sprite_group.add(self.ufo)
                 
