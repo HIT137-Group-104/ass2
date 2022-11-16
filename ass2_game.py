@@ -3,56 +3,56 @@ import sys
 import random
 from pygame.locals import *
 
-pg.init()
+pg.init()                                                   #initialising all pygame modules
 
 ''' SOUND '''
 
 shoot_sound = pg.mixer.Sound('sound/shoot.wav')
 start_sound = pg.mixer.Sound('sound/start.wav')
 collision_sound = pg.mixer.Sound('sound/hit.wav')
-end_sound = pg.mixer.Sound('sound/died.wav')
-start_music = pg.mixer.Sound('sound/start.menu.mp3')
+end_sound = pg.mixer.Sound('sound/died.wav')                #inserting sound effects and background music then store it on its own variables
+start_music = pg.mixer.Sound('sound/start.menu.mp3')        #pygame.mixer is a pygame module to load and play sound
 end_music = pg.mixer.Sound('sound/gameover.menu.mp3')
 bg_music = pg.mixer.music.load('sound/bg.music.mp3')
 
-pg.mixer.init()
+pg.mixer.init()                                             #initialising the mixer in the game
 
 
 ''' IMAGES '''
 
 player = 'assets/space_ship.png'
 small_enemy = 'assets/small_enemy.png'
-big_enemy = 'assets/big_enemy.png'
+big_enemy = 'assets/big_enemy.png'                          #inserting different shapes of the game then store it on its own variables
 player_bullet = 'assets/player_bullet.png'
 small_enemy_bullet = 'assets/small_bullet.png'
 big_enemy_bullet = 'assets/big_bullet.png'
 player_lives = 'assets/heart.png'
 
 
-screen = pg.display.set_mode((800, 600))
-s_width, s_height = screen.get_size()
-caption = pg.display.set_caption("Group 104")
-pygame_icon = pg.image.load(player)
+screen = pg.display.set_mode((800, 600))                    #set the screen to be its following resolution then store it to "screen"
+s_width, s_height = screen.get_size()                       #creating width and height variable and store the screen into it
+caption = pg.display.set_caption("Group 104")               #changing the title of the tab to be "Group 104"
+pygame_icon = pg.image.load(player)                         #store "player" picture into its variable
 bg_img = pg.image.load('assets/crash.jpg').convert()
-bg_img2 = pg.image.load('assets/background.gif').convert()
+bg_img2 = pg.image.load('assets/background.gif').convert()      #load pictures then store it
 bg_img = pg.transform.smoothscale(bg_img, screen.get_size())
-bg_img2 = pg.transform.smoothscale(bg_img2, screen.get_size())
-pg.display.set_icon(pygame_icon)
+bg_img2 = pg.transform.smoothscale(bg_img2, screen.get_size())  #call the variables to be able to load the pictures
+pg.display.set_icon(pygame_icon)                            #changing the icon of the game
 
 clock = pg.time.Clock()
-FPS = 60
+FPS = 60                                                    #set the frame rate per second to make the game play smooth
 
 bg_grp = pg.sprite.Group()
 player_grp = pg.sprite.Group()
 small_enemy_grp = pg.sprite.Group()
 big_enemy_grp = pg.sprite.Group()
-player_bullet_grp = pg.sprite.Group()
+player_bullet_grp = pg.sprite.Group()                       #create variables for pygame sprite group to hold and manage multiple Sprite objects
 small_bullet_grp = pg.sprite.Group()
 big_bullet_grp = pg.sprite.Group()
 spots_grp = pg.sprite.Group()
 
 sprite_group = pg.sprite.Group()
-pg.mouse.set_visible(False)
+pg.mouse.set_visible(False)                                 #make the cursor invisible when play the game
 
 
 class Background(pg.sprite.Sprite):
