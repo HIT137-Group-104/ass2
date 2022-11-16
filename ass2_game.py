@@ -93,38 +93,42 @@ class Player(pg.sprite.Sprite):
         self.image = pg.image.load(img)
         self.rect = self.image.get_rect()
         self.image.set_colorkey('black')    #so the player image does not look like a rectangle
-        self.alive = True
-        self.count_to_live = 0
-        self.activate_bullet = True
-        self.alpha_duration = 0
+        self.alive = True                   #method to decide whether the player will live or not
+        self.count_to_live = 0              #method to decide whether the player will spawn or not
+        self.activate_bullet = True         #method to decide whether the player will shoot or not
+        self.alpha_duration = 0             #method to decide whether the duration of player will transparent or not
 
     def update(self):
-        if self.alive:
-            self.image.set_alpha(80)
-            self.alpha_duration += 1
+        if self.alive:                             
+            self.image.set_alpha(80)                #before the player alive, the player will look transparent for a while (immune for few seconds(will not get hit by enemies))
+            self.alpha_duration += 1                #if the player alive, it will follow the mouse cursor 
             if self.alpha_duration > 170:
                 self.image.set_alpha(255)
-        mouse = pg.mouse.get_pos()                  #Player will follow the mouse cursor
-        self.rect.x = mouse[0] - 20                 #To center the player bullet
-        self.rect.y = mouse[1] + 40
-        if self.count_to_live > 100:
-            self.alive = True
-            self.count_to_live = 0
-            self.activate_bullet = True
+            mouse = pg.mouse.get_pos()                  #player will follow the mouse cursor
+            self.rect.x = mouse[0] - 20                 #to center the player bullet
+            self.rect.y = mouse[1] + 40
+        else:
+            self.alpha_duration = 0                 #to make the player will have immune after dead continously
+            self.rect.y = s_height + 200            #if player died, the player will be dissapeared 
+            self.count_to_live += 1
+            if self.count_to_live > 100:
+                self.alive = True                   #the player will spawn again after first dead, 
+                self.count_to_live = 0              #the player will continously spawn after second dead
+                self.activate_bullet = True         #the player will be able to shoot after dead
 
     def shoot(self):
-        bullet = PlayerBullet(player_bullet)
-        mouse = pg.mouse.get_pos()
-        bullet.rect.x = mouse[0]
-        bullet.rect.y = mouse[1]
-        player_bullet_grp.add(bullet)
-        sprite_group.add(bullet)
+        if self.activate_bullet:                    #the player will be able to shoot on the first screen, and after dead
+            bullet = PlayerBullet(player_bullet)
+            mouse = pg.mouse.get_pos()
+            bullet.rect.x = mouse[0]
+            bullet.rect.y = mouse[1]
+            player_bullet_grp.add(bullet)
+            sprite_group.add(bullet)
 
     def dead(self):
-        pg.mixer.Sound.play(collision_sound)
-        self.alive = False
-        self.activate_bullet = False
-
+        pg.mixer.Sound.play(collision_sound)    #if player got shooted by small or big enemies, a collision sound effect will play
+        self.alive = False                      #the player will not live
+        self.activate_bullet = False            #if player died, it will not be able to shoot
 
 class Small(Player):
     def __init__(self, img):
@@ -361,16 +365,16 @@ class Game:                                 #making a class for game
                 pg.mixer.Sound.play(collision_sound)
 
     def smallbullet_shoot_player(self):
-        if self.player.image.get_alpha() == 255:
+        if self.player.image.get_alpha() == 255:        #the player will not get hit by enemies
             hits = pg.sprite.spritecollide(self.player, small_bullet_grp, True)
             if hits:
                 self.lives -= 1
-                self.player.dead()
-                if self.lives < 0:
+                self.player.dead()      #if the player got shooted, player lives wil be decreasing by one 
+                if self.lives < 0:      #and if its less than zero, the screen will end
                     self.screen_end()
 
     def bigbullet_shoot_player(self):
-        if self.player.image.get_alpha() == 255:
+        if self.player.image.get_alpha() == 255:        #the player will not get hit by enemies
             hits = pg.sprite.spritecollide(self.player, big_bullet_grp, True)
             if hits:
                 self.lives -= 1
@@ -379,24 +383,24 @@ class Game:                                 #making a class for game
                     self.screen_end()
                     
     def player_small_crash(self):
-        if self.player.image.get_alpha() == 255:
+        if self.player.image.get_alpha() == 255:        #the player will not be affected when touch the enemies
             hits = pg.sprite.spritecollide(self.player, small_enemy_grp, False)
             if hits:
                 for i in hits:
                     i.rect.x = random.randrange(0, s_width)
-                    i.rect.y = random.randrange(-3000, -100)
+                    i.rect.y = random.randrange(-3000, -100)       #if the small enemies crashed by the player, it will spawn randomly
                     self.lives -= 1
-                    self.player.dead()
-                    if self.lives < 0:
+                    self.player.dead()                  #if the player got crashed with the enemies, player lives wil be decreasing by one            
+                    if self.lives < 0:                  #and if its less than zero, the screen will end
                         self.screen_end()
  
     def player_big_crash(self):
-        if self.player.image.get_alpha() == 255:
+        if self.player.image.get_alpha() == 255:        #the player will not be affected when touch the enemies
             hits = pg.sprite.spritecollide(self.player, big_enemy_grp, False)
             if hits:
                 for i in hits:
                     i.rect.x = -199
-                    self.lives -= 1
+                    self.lives -= 1                     #if the big enemies crashed by the player, it will spawn randomly
                     self.player.dead()
                     if self.lives < 0:
                         self.screen_end()
@@ -474,11 +478,11 @@ class Game:                                 #making a class for game
             self.create_small_enemy()
             self.create_big_enemy()
             
-        while True:
+        while True:                                 #the game will restart when the while loop is true
             screen.fill('black')
             self.playerbullet_shoot_small()
             self.playerbullet_shoot_big()
-            self.smallbullet_shoot_player()
+            self.smallbullet_shoot_player()         #the game will restart if all these instance of the classes is running properly
             self.bigbullet_shoot_player()
             self.player_small_crash()
             self.player_big_crash()
