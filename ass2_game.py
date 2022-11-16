@@ -75,15 +75,15 @@ class Background(pg.sprite.Sprite):                         #make a background c
 class Spots(Background):                                  
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.rect.x = random.randrange(0, s_width)
-        self.rect.y = random.randrange(0, s_height)
+        self.rect.x = random.randrange(0, s_width) #from the random range of x and y axis, the spots will appear randomly, whole width and height of the screen
+        self.rect.y = random.randrange(0, s_height) 
         self.image.fill('grey')             #changing the spots(stars) colour to grey
-        self.vel = random.randint(3, 8)     #the amount of spaces it will randomly move from top to bottom
+        self.vel = random.randint(3, 8)     #the amount of spaces it will randomly move from top to bottom, i.e the speed of spots going downwards
 
     def update(self):
         self.rect.y += self.vel     #the spots will keep going downwards
-        if self.rect.y > s_height:  #until it reaches the bottom
-            self.rect.x = random.randrange(0, s_width)
+        if self.rect.y > s_height:  #if the spots increase in y axis until it reaches the bottom
+            self.rect.x = random.randrange(0, s_width)  #more spots will appear randomly based on this x and y axis random range, from the whole width and height of the screen
             self.rect.y = random.randrange(0, s_height)
 
 
@@ -346,23 +346,23 @@ class Game:                                 #making a class for game
     def playerbullet_shoot_small(self):
         hits = pg.sprite.groupcollide(small_enemy_grp, player_bullet_grp, False, True)
         for i in hits:
-            self.count_hit += 1
-            if self.count_hit == 1:
-                self.score += 10
-                i.rect.x = random.randrange(0, s_width)
+            self.count_hit += 1  #everytime a bullet from the player hits the small enemy, the count from self.count_hit will increase by 1
+            if self.count_hit == 1: #if the bullet from player hits the small enemy twice,
+                self.score += 10    #player will receive 10 points
+                i.rect.x = random.randrange(0, s_width) #when the small enemy gets destroyed, it will be spawned again randomly based on these x and y coordinates
                 i.rect.y = random.randrange(-3000, -100)
-                self.count_hit = 0
-                pg.mixer.Sound.play(collision_sound)
+                self.count_hit = 0  #then the small enemies will reset their counts back to 0
+                pg.mixer.Sound.play(collision_sound) #sound when the player bullet hits the small enemy
 
     def playerbullet_shoot_big(self):
         hits = pg.sprite.groupcollide(big_enemy_grp, player_bullet_grp, False, True)
         for i in hits:
-            self.count_hit2 += 1
-            if self.count_hit2 == 10:
-                self.score += 50
-                i.rect.x = -199
-                self.count_hit2 = 0
-                pg.mixer.Sound.play(collision_sound)
+            self.count_hit2 += 1 #similar for the small enemy, the count from self.count_hit2 will increase by 1 everytime the big enemy gets hit by the player buller
+            if self.count_hit2 == 10: #it will get destroyed when it gets hit by the player bullet 10 times
+                self.score += 50 #player will score 50 points when the big enemy gets destroyed
+                i.rect.x = -199 #it will then be spawned from the x coordinate since we want it to move horizontally
+                self.count_hit2 = 0 #this will return the self.count for the big enemy to 0
+                pg.mixer.Sound.play(collision_sound) #sound when the player bullet hits the big enemy
 
     def smallbullet_shoot_player(self):
         if self.player.image.get_alpha() == 255:        #the player will not get hit by enemies
@@ -381,6 +381,23 @@ class Game:                                 #making a class for game
                 self.player.dead()
                 if self.lives < 0:
                     self.screen_end()
+                    
+        if self.player.image.get_alpha() == 255:
+            hits = pg.sprite.spritecollide(self.player, small_bullet_grp, True) #when the following condition which is when the small enemy bullet hits the player is true,
+            if hits:                                                            #the if statements will run
+                self.lives -= 1               #in this case, everytime the player gets hit by the small enemy bullet, the player life will reduce by 1
+                self.player.dead()            #the player will die
+                if self.lives < 0:            #if the player lives has less than 0 lives
+                    self.screen_end()         #it will go to the end screen which is game over
+
+    def bigbullet_shoot_player(self):
+        if self.player.image.get_alpha() == 255:
+            hits = pg.sprite.spritecollide(self.player, big_bullet_grp, True) #when the following condition which is when the big enemy bullet hits the player is true,
+            if hits:                                                          #the if statements will run
+                self.lives -= 1                #similar to smallbullet, everytime the player gets hit by the big enemy bullet, the player life will reduce by 1
+                self.player.dead()             #the player will die
+                if self.lives < 0:             #if the player lives has less than 0 lives
+                    self.screen_end()          #it will go to the end screen which is game over
                     
     def player_small_crash(self):
         if self.player.image.get_alpha() == 255:        #the player will not be affected when touch the enemies
@@ -406,19 +423,19 @@ class Game:                                 #making a class for game
                         self.screen_end()
 
     def create_lives(self):             
-        self.live_img = pg.image.load(player_lives)
-        self.live_img = pg.transform.scale(self.live_img, (30, 30))
-        n = 0
+        self.live_img = pg.image.load(player_lives) #the image of the player lives
+        self.live_img = pg.transform.scale(self.live_img, (30, 30)) #this is the size of the player lives image
+        n = 0 #count for n
         for i in range(self.lives):
-            screen.blit(self.live_img, (0+n, s_height-50))
-            n += 40
+            screen.blit(self.live_img, (0+n, s_height-50)) #this coordinates is where we want the player lives image to be positioned in the run_game
+            n += 40 #the gap between the player lives
 
     def create_score(self):
         score = self.score
-        font = pg.font.SysFont('Verandah', 30)
-        text = font.render("Point: "+str(score), True, 'white')
-        text_rect = text.get_rect(center=(s_width-100, s_height-585))
-        screen.blit(text, text_rect)
+        font = pg.font.SysFont('Verandah', 30)  #the font for the score text
+        text = font.render("Point: "+str(score), True, 'white') #the score will be a string
+        text_rect = text.get_rect(center=(s_width-100, s_height-585)) #these coordinated is to position the text
+        screen.blit(text, text_rect) #this is to put the text and text_rect to the screen
 
     def run_update(self):
         sprite_group.draw(screen)  #draw the screen 
@@ -487,7 +504,7 @@ class Game:                                 #making a class for game
             self.player_small_crash()
             self.player_big_crash()
             self.run_update()
-            pg.draw.rect(screen, 'black', (0, 0, s_width, 30))
+            pg.draw.rect(screen, 'black', (0, 0, s_width, 30)) #to draw a rect for the below codes to reside in
             self.create_lives()
             self.create_score()
           
