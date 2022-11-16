@@ -283,12 +283,10 @@ class Game:
     def screen_end(self):
         pg.mixer.music.stop()
         pg.mixer.Sound.play(end_sound)
+        pg.mixer.Sound.play(end_music)
         while True:
             screen.blit(bg_img,(0,0))
             self.screen_end_text()
-            self.game_over_sound_delay += 1
-            if self.game_over_sound_delay > 1500:
-                pg.mixer.Sound.play(end_music)
 
             for event in pg.event.get():
                 if event.type == QUIT:
