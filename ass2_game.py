@@ -366,38 +366,21 @@ class Game:                                 #making a class for game
 
     def smallbullet_shoot_player(self):
         if self.player.image.get_alpha() == 255:        #the player will not get hit by enemies
-            hits = pg.sprite.spritecollide(self.player, small_bullet_grp, True)
-            if hits:
-                self.lives -= 1
-                self.player.dead()      #if the player got shooted, player lives wil be decreasing by one 
-                if self.lives < 0:      #and if its less than zero, the screen will end
-                    self.screen_end()
+            hits = pg.sprite.spritecollide(self.player, small_bullet_grp, True) #when the following condition which is when the small enemy bullet hits the player is true,
+            if hits:                                                             #the if statements will run
+                self.lives -= 1         #in this case, everytime the player gets hit by the small enemy bullet, the player life will reduce by 1
+                self.player.dead()      #the player will die 
+                if self.lives < 0:      #if the player lives has less than 0 lives
+                    self.screen_end()   #it will go to the end screen which is game over
 
     def bigbullet_shoot_player(self):
         if self.player.image.get_alpha() == 255:        #the player will not get hit by enemies
-            hits = pg.sprite.spritecollide(self.player, big_bullet_grp, True)
-            if hits:
-                self.lives -= 1
-                self.player.dead()
-                if self.lives < 0:
-                    self.screen_end()
-                    
-        if self.player.image.get_alpha() == 255:
-            hits = pg.sprite.spritecollide(self.player, small_bullet_grp, True) #when the following condition which is when the small enemy bullet hits the player is true,
-            if hits:                                                            #the if statements will run
-                self.lives -= 1               #in this case, everytime the player gets hit by the small enemy bullet, the player life will reduce by 1
-                self.player.dead()            #the player will die
-                if self.lives < 0:            #if the player lives has less than 0 lives
-                    self.screen_end()         #it will go to the end screen which is game over
-
-    def bigbullet_shoot_player(self):
-        if self.player.image.get_alpha() == 255:
             hits = pg.sprite.spritecollide(self.player, big_bullet_grp, True) #when the following condition which is when the big enemy bullet hits the player is true,
             if hits:                                                          #the if statements will run
-                self.lives -= 1                #similar to smallbullet, everytime the player gets hit by the big enemy bullet, the player life will reduce by 1
-                self.player.dead()             #the player will die
-                if self.lives < 0:             #if the player lives has less than 0 lives
-                    self.screen_end()          #it will go to the end screen which is game over
+                self.lives -= 1 #similar to smallbullet, everytime the player gets hit by the big enemy bullet, the player life will reduce by 1
+                self.player.dead()  #the player will die
+                if self.lives < 0:  #if the player lives has less than 0 lives
+                    self.screen_end()   #it will go to the end screen which is game over
                     
     def player_small_crash(self):
         if self.player.image.get_alpha() == 255:        #the player will not be affected when touch the enemies
