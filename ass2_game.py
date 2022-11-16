@@ -210,29 +210,29 @@ class Game:                                 #making a class for game
         self.start_screen()
 
     def start_text(self):
-        font = pg.font.SysFont('Verandah', 70)
+        font = pg.font.SysFont('Verandah', 70) #font for the title using SysFont, from our computer
         text = font.render('Space Defender', True, 'aqua')
-        text_rect = text.get_rect(center=(s_width/2, s_height/2-200))
+        text_rect = text.get_rect(center=(s_width/2, s_height/2-200)) #coordinates are where the text will be positioned in the start screen
         screen.blit(text, text_rect)
 
         font2 = pg.font.SysFont('Verandah', 40)
         text2 = font2.render('Press Space to Start', True, 'white')
-        text2_rect = text2.get_rect(center=(s_width/2, s_height/2))
+        text2_rect = text2.get_rect(center=(s_width/2, s_height/2)) #coordinates are where the text will be positioned in the start screen
         screen.blit(text2, text2_rect)
         
         font3 = pg.font.SysFont('Verandah', 30)
         text3 = font3.render('Instructions: Press S key to shoot bullets and use mouse to move', True, 'white')
-        text3_rect = text3.get_rect(center=(s_width/2, s_height/2+100))
+        text3_rect = text3.get_rect(center=(s_width/2, s_height/2+100)) #coordinates are where the text will be positioned in the start screen
         screen.blit(text3, text3_rect)
         
         font4 = pg.font.SysFont('Verandah', 30)
-        text4 = font4.render('Destroy small spaceship = 1 bullet', True, 'white')
-        text4_rect = text4.get_rect(center=(s_width/2, s_height/2+150))
+        text4 = font4.render('Destroy small spaceship = 2 bullets', True, 'white')
+        text4_rect = text4.get_rect(center=(s_width/2, s_height/2+150)) #coordinates are where the text will be positioned in the start screen
         screen.blit(text4, text4_rect)
         
         font5 = pg.font.SysFont('Verandah', 30)
         text5 = font5.render('Destroy big spaceship = 10 bullets', True, 'white')
-        text5_rect = text5.get_rect(center=(s_width/2, s_height/2+180))
+        text5_rect = text5.get_rect(center=(s_width/2, s_height/2+180)) #coordinates are where the text will be positioned in the start screen
         screen.blit(text5, text5_rect)
 
     def start_screen(self):
@@ -249,12 +249,12 @@ class Game:                                 #making a class for game
                     pg.quit()
                     sys.exit()
 
-                if event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
-                        pg.quit()
+                if event.type == KEYDOWN: #if a key is pressed
+                    if event.key == K_ESCAPE:   #in this case, if the escape key is pressed
+                        pg.quit()       #the game will quit and exit
                         sys.exit()
-                    if event.key == K_SPACE:
-                        self.run_game()
+                    if event.key == K_SPACE: #if the space key is pressed
+                        self.run_game()     #it will run the game
 
             pg.display.update()
 
@@ -315,9 +315,9 @@ class Game:                                 #making a class for game
 
     def create_spots(self):
         for i in range(70): #create the amount of spots going downwards
-            x = 1
-            y = random.randint(1, 7)
-            stars = Spots(x, y)
+            x = 1 #length of spots horizontally
+            y = random.randint(1, 7) #randomly appear different length of spots raining down, i.e length of spots vertically
+            stars = Spots(x, y) #assign it to spots variable
             spots_grp.add(stars)
             sprite_group.add(stars)
 
