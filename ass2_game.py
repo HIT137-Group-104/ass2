@@ -206,7 +206,7 @@ class Game:                                 #making a class for game
         self.init_create = True
         self.count_hit = 0
         self.count_hit2 = 0
-        self.lives = 3
+        self.lives = 3                      #initial counts upon starting and restarting the game
         self.score = 0
         self.count_enemy = 0
         self.count_ufo = 0
