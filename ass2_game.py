@@ -62,22 +62,22 @@ class Background(pg.sprite.Sprite):                         #make a background c
         self.image = pg.Surface([x, y])                     #to represent any image
         self.image.fill('white')                            #make the surface colour to be white (this is for spots(stars) elements on the black background)
         self.image.set_colorkey('black')                    #to make the image transparent
-        self.rect = self.image.get_rect()                   #a variable to store x and y values
+        self.rect = self.image.get_rect()                   #it is a variable to store x and y values
 
     def update(self):
         self.rect.y += 1
         self.rect.x += 1                                    #to make the spots(stars) moving with a speed of 1
         if self.rect.y > s_height:
-            self.rect.y = random.randrange(-10, 0)          #if the spots(starts) going beyond the height, it will reset to  any y value randomly
-            self.rect.x = random.randrange(-400, s_width)   #if the spots(starts) going beyond the height, it will reset to  any x value randomly
+            self.rect.y = random.randrange(-10, 0)          #if the spots(stars) going beyond the height, it will reset to  any y value randomly
+            self.rect.x = random.randrange(-400, s_width)   #if the spots(stars) going beyond the height, it will reset to  any x value randomly
 
 
 class Spots(Background):                                  
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.rect.x = random.randrange(0, s_width) #from the random range of x and y axis, the spots will appear randomly, whole width and height of the screen
+        self.rect.x = random.randrange(0, s_width)          #from the random range of x and y axis, the spots will appear randomly, whole width and height of the screen
         self.rect.y = random.randrange(0, s_height) 
-        self.image.fill('grey')             #changing the spots(stars) colour to grey
+        self.image.fill('grey')                  #changing the spots(stars) colour to grey
         self.vel = random.randint(3, 8)     #the amount of spaces it will randomly move from top to bottom, i.e the speed of spots going downwards
 
     def update(self):
@@ -118,10 +118,10 @@ class Player(pg.sprite.Sprite):
 
     def shoot(self):
         if self.activate_bullet:                    #the player will be able to shoot on the first screen, and after dead
-            bullet = PlayerBullet(player_bullet)
-            mouse = pg.mouse.get_pos()
+            bullet = PlayerBullet(player_bullet)    #player bullet picture will be created
+            mouse = pg.mouse.get_pos()              #player will follow the mouse cursor
             bullet.rect.x = mouse[0]
-            bullet.rect.y = mouse[1]
+            bullet.rect.y = mouse[1]                #to center the player bullet    
             player_bullet_grp.add(bullet)
             sprite_group.add(bullet)
 
@@ -141,14 +141,14 @@ class Small(Player):
         self.rect.y += 1
         if self.rect.y > s_height:     #how the small enemies will move in a direction that we want, in this case downwards
             self.rect.x = random.randrange(80, s_width-50)
-            self.rect.y = random.randrange(-2000, 0)
+            self.rect.y = random.randrange(-2000, 0)            #
         self.shoot()
 
     def shoot(self):
-        if self.rect.y in (0, 30, 70, 300, 700):
-            enemybullet = EnemyBullet(small_enemy_bullet)
+        if self.rect.y in (0, 30, 70, 300, 700):                #adjusting how many bullets will be shooted by small enemy, along wth its position
+            enemybullet = EnemyBullet(small_enemy_bullet)       #small enemy bullet picture will be created
             enemybullet.rect.x = self.rect.x + 20
-            enemybullet.rect.y = self.rect.y + 50
+            enemybullet.rect.y = self.rect.y + 50               #to center the small enemy bullet
             small_bullet_grp.add(enemybullet)
             sprite_group.add(enemybullet)
 
@@ -162,15 +162,15 @@ class Big(Small):
 
     def update(self):
         self.rect.x += self.move
-        if self.rect.x > s_width + 200:
-            self.move *= -1
+        if self.rect.x > s_width + 200:     #how the small enemies will move in a direction that we want, in this case horizontally
+            self.move *= -1                 #the big enemy will go from left to right of the screen
         elif self.rect.x < -200:
-            self.move *= -1
+            self.move *= -1                 #if not, the big enemy will go from right to left of the screen
         self.shoot()
 
     def shoot(self):
         if self.rect.x % 50 == 0:
-            bigbullet = EnemyBullet(big_enemy_bullet)
+            bigbullet = EnemyBullet(big_enemy_bullet)       #big enemy bullet picture will be created
             bigbullet.rect.x = self.rect.x + 50 #this is to ensure that the bullets are shot from the middle
             bigbullet.rect.y = self.rect.y + 70
             big_bullet_grp.add(bigbullet)
@@ -240,13 +240,13 @@ class Game:                                 #making a class for game
         screen.blit(text5, text5_rect)
 
     def start_screen(self):
-        pg.mixer.Sound.stop(end_music)
-        pg.mixer.Sound.play(start_music)
-        self.lives = 3
+        pg.mixer.Sound.stop(end_music)      #if users press esc on the end screen, it will return to start screen and stop the game over background music
+        pg.mixer.Sound.play(start_music)    #start screen background music will play
+        self.lives = 3                
         sprite_group.empty()
         
         while True:
-            screen.blit(bg_img2, (0,0))
+            screen.blit(bg_img2, (0,0))     #placing a main menu background picture
             self.start_text()
             for event in pg.event.get():
                 if event.type == QUIT:
@@ -284,11 +284,11 @@ class Game:                                 #making a class for game
         screen.blit(text3, text3_rect)
 
     def screen_end(self):
-        pg.mixer.music.stop()
-        pg.mixer.Sound.play(end_sound)
+        pg.mixer.music.stop()               #the background music on the running game will stop
+        pg.mixer.Sound.play(end_sound)      #when player has no 0 lives, sound effect will play then game over background music will play
         pg.mixer.Sound.play(end_music)
         while True:
-            screen.blit(bg_img,(0,0))
+            screen.blit(bg_img,(0,0))       #placing a crash background image on the game over screen
             self.screen_end_text()
 
             for event in pg.event.get():
@@ -326,21 +326,21 @@ class Game:                                 #making a class for game
             sprite_group.add(stars)
 
     def create_player(self):
-        self.player = Player(player)
+        self.player = Player(player)        #player ship picture will be created
         player_grp.add(self.player)
         sprite_group.add(self.player)
 
     def create_small_enemy(self):
         for i in range(6):      #how many small enemies we want to spawn
-            self.enemy = Small(small_enemy) 
+            self.enemy = Small(small_enemy)     #small enemy picture will be created
             small_enemy_grp.add(self.enemy)
             sprite_group.add(self.enemy)
                 
     def create_big_enemy(self):
         for i in range(1):      # 1 big enemy to spawn
-            self.ufo = Big(big_enemy)   
-            big_enemy_grp.add(self.ufo)
-            sprite_group.add(self.ufo)
+            self.big_enemy = Big(big_enemy)       #big enemy picture will be created
+            big_enemy_grp.add(self.big_enemy)
+            sprite_group.add(self.big_enemy)
                 
 
     def playerbullet_shoot_small(self):
@@ -443,7 +443,7 @@ class Game:                                 #making a class for game
             self.player_small_crash()
             self.player_big_crash()
             self.run_update()
-            pg.draw.rect(screen, 'black', (0, 0, s_width, 30))
+            pg.draw.rect(screen, 'black', (0, 0, s_width, 30))  #to draw a rect for the below codes to reside in
             self.create_lives()
             self.create_score()
             
@@ -466,8 +466,8 @@ class Game:                                 #making a class for game
             clock.tick(FPS)
 
     def restart_game(self):
-        pg.mixer.Sound.stop(end_music)
-        pg.mixer.music.play(-1)
+        pg.mixer.Sound.stop(end_music)      #if users want to restart the game, the game over background music will stop
+        pg.mixer.music.play(-1)             #instead, background music in running game will play countinously 
         self.lives = 3
         sprite_group.empty()
         
@@ -496,13 +496,13 @@ class Game:                                 #making a class for game
                     pg.quit()
                     sys.exit()
 
-                if event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
+                if event.type == KEYDOWN:  
+                    if event.key == K_ESCAPE:       #the game will quit or move to start screen when players press escape
                         pg.quit()
                         sys.exit()
 
-                    if event.key == K_s:
-                        pg.mixer.Sound.play(shoot_sound)
+                    if event.key == K_s:                    #the player will shoot if they press "s" key
+                        pg.mixer.Sound.play(shoot_sound)    #sound effect when shooting
                         self.player.shoot()
 
             pg.display.update()
