@@ -140,14 +140,14 @@ class Small(Player):
     def update(self):
         self.rect.y += 1
         if self.rect.y > s_height:     #how the small enemies will move in a direction that we want, in this case downwards
-            self.rect.x = random.randrange(80, s_width-50)
+            self.rect.x = random.randrange(80, s_width-50) #random range the small enemy will spawn 
             self.rect.y = random.randrange(-2000, 0)
-        self.shoot()
+        self.shoot()  
 
     def shoot(self):
-        if self.rect.y in (0, 30, 70, 300, 700):
+        if self.rect.y in (0, 30, 70, 300, 700):    #the instances on y axis where it can shoot
             enemybullet = EnemyBullet(small_enemy_bullet)
-            enemybullet.rect.x = self.rect.x + 20
+            enemybullet.rect.x = self.rect.x + 20       #to center the small enemy bullets coming from the small enemies
             enemybullet.rect.y = self.rect.y + 50
             small_bullet_grp.add(enemybullet)
             sprite_group.add(enemybullet)
@@ -161,8 +161,8 @@ class Big(Small):
         self.move = 1
 
     def update(self):
-        self.rect.x += self.move
-        if self.rect.x > s_width + 200:
+        self.rect.x += self.move  #the big enemy will continue to move from the left to right if not killed
+        if self.rect.x > s_width + 200: 
             self.move *= -1
         elif self.rect.x < -200:
             self.move *= -1
@@ -171,7 +171,7 @@ class Big(Small):
     def shoot(self):
         if self.rect.x % 50 == 0:
             bigbullet = EnemyBullet(big_enemy_bullet)
-            bigbullet.rect.x = self.rect.x + 50 #this is to ensure that the bullets are shot from the middle
+            bigbullet.rect.x = self.rect.x + 50     #this is to ensure that the bullets are shot from the middle
             bigbullet.rect.y = self.rect.y + 70
             big_bullet_grp.add(bigbullet)
             sprite_group.add(bigbullet)
@@ -242,11 +242,11 @@ class Game:                                 #making a class for game
     def start_screen(self):
         pg.mixer.Sound.stop(end_music)
         pg.mixer.Sound.play(start_music)
-        self.lives = 3
+        self.lives = 3  #lives will start at 3
         sprite_group.empty()
         
         while True:
-            screen.blit(bg_img2, (0,0))
+            screen.blit(bg_img2, (0,0))  
             self.start_text()
             for event in pg.event.get():
                 if event.type == QUIT:
@@ -308,7 +308,7 @@ class Game:                                 #making a class for game
 
             pg.display.update()
 
-    def create_bg(self):            #define a function for "create_bg) 
+    def create_bg(self):            #define a function for "create_bg"
         for i in range(20):         #create the amount of spots in this case 20, going diagonally in the background 
             x = random.randint(1, 6)        #change the size between 1-6px randomly
             bg_img = Background(x, x)
@@ -344,7 +344,7 @@ class Game:                                 #making a class for game
                 
 
     def playerbullet_shoot_small(self):
-        hits = pg.sprite.groupcollide(small_enemy_grp, player_bullet_grp, False, True)
+        hits = pg.sprite.groupcollide(small_enemy_grp, player_bullet_grp, False, True) #we do not want the small enemy to disappear in 1 hit/collision, therefore we put it as False. but we want the player bullet to disappear everytime it hits the small enemy, therefore we put it as True.
         for i in hits:
             self.count_hit += 1  #everytime a bullet from the player hits the small enemy, the count from self.count_hit will increase by 1
             if self.count_hit == 1: #if the bullet from player hits the small enemy twice,
@@ -355,7 +355,7 @@ class Game:                                 #making a class for game
                 pg.mixer.Sound.play(collision_sound) #sound when the player bullet hits the small enemy
 
     def playerbullet_shoot_big(self):
-        hits = pg.sprite.groupcollide(big_enemy_grp, player_bullet_grp, False, True)
+        hits = pg.sprite.groupcollide(big_enemy_grp, player_bullet_grp, False, True) #we do not want the big enemy to disappear in 1 hit/collision with the bullet, therefore we put it as False. but we want the player bullet to disappear everytime it hits the big enemy, therefore we put it as True.
         for i in hits:
             self.count_hit2 += 1 #similar for the small enemy, the count from self.count_hit2 will increase by 1 everytime the big enemy gets hit by the player buller
             if self.count_hit2 == 10: #it will get destroyed when it gets hit by the player bullet 10 times
